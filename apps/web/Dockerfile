@@ -54,6 +54,8 @@ RUN --mount=type=cache,id=pnpm,target=~/.pnpm-store pnpm install --frozen-lockfi
 # ============================================
 FROM alpine AS builder
 ARG APP_VERSION
+ARG NEXT_PUBLIC_APP_NAME
+ARG NEXT_PUBLIC_BASE_URL
 
 WORKDIR /app
 
@@ -66,6 +68,8 @@ ENV NEXT_PUBLIC_USE_STANDALONE_OUTPUT=true
 ENV CI=true
 
 RUN VERSION="${APP_VERSION:-$(cat /tmp/AUTO_VERSION 2>/dev/null | tr -d '\n\r' || echo 'unknown')}" && \
+    NEXT_PUBLIC_APP_NAME="$NEXT_PUBLIC_APP_NAME" \
+    NEXT_PUBLIC_BASE_URL="$NEXT_PUBLIC_BASE_URL" \
     NEXT_PUBLIC_APP_VERSION="$VERSION" pnpm build --filter=@kan/web
 
 # ============================================
