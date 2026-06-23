@@ -1,4 +1,25 @@
 services:
+  postgres:
+    image: postgres:17-alpine
+    container_name: ${POSTGRES_CONTAINER_NAME:-kan-postgres}
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    networks:
+      - kan-network
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-admin}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-pass}
+      POSTGRES_DB: ${POSTGRES_DB:-kan}
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test:
+        ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-admin} -d ${POSTGRES_DB:-kan}"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    restart: unless-stopped
+
   migrate:
     image: ghcr.io/kanbn/kan-migrate:latest
     container_name: ${CONTAINER_NAME:-kan-migrate}
@@ -9,7 +30,10 @@ services:
       dockerfile: ./apps/web/Dockerfile
       target: migrate
     environment:
-      - POSTGRES_URL=${POSTGRES_URL}
+      - POSTGRES_URL=postgres://admin:pass@postgres:5432/kan
+    depends_on:
+      postgres:
+        condition: service_healthy
     restart: "no"
 
   web:
@@ -23,13 +47,11 @@ services:
       context: .
       dockerfile: ./apps/web/Dockerfile
       target: web
-    env_file:
-      - .env
     environment:
       # Required environment variables
       - NEXT_PUBLIC_BASE_URL=${NEXT_PUBLIC_BASE_URL}
       - BETTER_AUTH_SECRET=${BETTER_AUTH_SECRET}
-      - POSTGRES_URL=${POSTGRES_URL}
+      - POSTGRES_URL=postgres://admin:pass@postgres:5432/kan
 
       # Redis (optional - for rate limiting)
       - REDIS_URL=${REDIS_URL}
@@ -89,3 +111,6 @@ services:
 
 networks:
   kan-network:
+
+volumes:
+  postgres-data:

@@ -57,21 +57,38 @@ The easiest way to deploy Kan is through Railway. We've partnered with Railway t
 
 ### Docker Compose
 
-Alternatively, you can self-host Kan with Docker Compose. This will run the app and migrations against your managed PostgreSQL database.
+Alternatively, you can self-host Kan with Docker Compose. This will start a local PostgreSQL container, run migrations, and then launch the app.
 
-1. Create a `.env` file with your environment variables (see [Environment Variables](#environment-variables-) section below)
+1. Set the required environment variables in your shell or create a `.env` file with them (see [Environment Variables](#environment-variables-) section below)
 
 2. Use the provided `docker-compose.yml` file or create your own with the following configuration:
 
 ```yaml
 services:
+  postgres:
+    image: postgres:17-alpine
+    container_name: kan-postgres
+    ports:
+      - "5432:5432"
+    networks:
+      - kan-network
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: pass
+      POSTGRES_DB: kan
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+
   migrate:
     image: ghcr.io/kanbn/kan-migrate:latest
     container_name: kan-migrate
     networks:
       - kan-network
     environment:
-      - POSTGRES_URL=${POSTGRES_URL}
+      - POSTGRES_URL=postgres://admin:pass@postgres:5432/kan
+    depends_on:
+      postgres:
+        condition: service_healthy
     restart: "no"
 
   web:
@@ -81,12 +98,10 @@ services:
       - "${WEB_PORT:-3000}:3000"
     networks:
       - kan-network
-    env_file:
-      - .env
     environment:
       - NEXT_PUBLIC_BASE_URL=${NEXT_PUBLIC_BASE_URL}
       - BETTER_AUTH_SECRET=${BETTER_AUTH_SECRET}
-      - POSTGRES_URL=${POSTGRES_URL}
+      - POSTGRES_URL=postgres://admin:pass@postgres:5432/kan
       - NEXT_PUBLIC_ALLOW_CREDENTIALS=true
     depends_on:
       migrate:
@@ -95,6 +110,9 @@ services:
 
 networks:
   kan-network:
+
+volumes:
+  postgres-data:
 ```
 
 3. Start the containers in detached mode:
