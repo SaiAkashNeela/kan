@@ -57,81 +57,27 @@ The easiest way to deploy Kan is through Railway. We've partnered with Railway t
 
 ### Docker Compose
 
-Alternatively, you can self-host Kan with Docker Compose. This will start a local PostgreSQL container, run migrations, and then launch the app.
+The provided `docker-compose.yml` is tuned for Dokploy-style deployments. It runs the app and migration container, and expects a managed PostgreSQL instance that you provide through `POSTGRES_URL`.
 
-1. Set the required environment variables in your shell or create a `.env` file with them (see [Environment Variables](#environment-variables-) section below)
+1. Set the required environment variables in your Dokploy app or in a `.env` file, including:
 
-2. Use the provided `docker-compose.yml` file or create your own with the following configuration:
-
-```yaml
-services:
-  postgres:
-    image: postgres:17-alpine
-    container_name: kan-postgres
-    ports:
-      - "5432:5432"
-    networks:
-      - kan-network
-    environment:
-      POSTGRES_USER: admin
-      POSTGRES_PASSWORD: pass
-      POSTGRES_DB: kan
-    volumes:
-      - postgres-data:/var/lib/postgresql/data
-
-  migrate:
-    image: ghcr.io/kanbn/kan-migrate:latest
-    container_name: kan-migrate
-    networks:
-      - kan-network
-    environment:
-      - POSTGRES_URL=postgres://admin:pass@postgres:5432/kan
-    depends_on:
-      postgres:
-        condition: service_healthy
-    restart: "no"
-
-  web:
-    image: ghcr.io/kanbn/kan:latest
-    container_name: kan-web
-    ports:
-      - "${WEB_PORT:-3000}:3000"
-    networks:
-      - kan-network
-    environment:
-      - NEXT_PUBLIC_BASE_URL=${NEXT_PUBLIC_BASE_URL}
-      - BETTER_AUTH_SECRET=${BETTER_AUTH_SECRET}
-      - POSTGRES_URL=postgres://admin:pass@postgres:5432/kan
-      - NEXT_PUBLIC_ALLOW_CREDENTIALS=true
-    depends_on:
-      migrate:
-        condition: service_completed_successfully
-    restart: unless-stopped
-
-networks:
-  kan-network:
-
-volumes:
-  postgres-data:
+```env
+APP_DOMAIN=kan.example.com
+NEXT_PUBLIC_APP_NAME=Kan
+NEXT_PUBLIC_BASE_URL=https://kan.example.com
+BETTER_AUTH_SECRET=your_long_random_secret
+POSTGRES_URL=postgresql://user:pass@managed-db.example.com:5432/kan
 ```
 
-3. Start the containers in detached mode:
+2. Deploy the provided `docker-compose.yml` file in Dokploy.
 
-```bash
-docker compose up -d
-```
+3. Dokploy will route the `web` service on port `3000` through your configured domain.
 
-The `migrate` service will automatically run database migrations before the web service starts. The application will be available at http://localhost:3000 (or the port specified in `WEB_PORT`).
+The `migrate` service will automatically run database migrations before the web service starts.
 
-**Managing containers:**
+Use the Dokploy UI for logs, restarts, and rebuilds after code changes.
 
-- To stop the containers: `docker compose down`
-- To view logs: `docker compose logs -f`
-- To view logs for a specific service: `docker compose logs -f web` or `docker compose logs -f migrate`
-- To restart the containers: `docker compose restart`
-- To rebuild after code changes: `docker compose up -d --build`
-
-For the complete Docker Compose configuration with all optional features, see [docker-compose.yml](./docker-compose.yml) in the repository.
+For the complete Docker Compose configuration, see [docker-compose.yml](./docker-compose.yml) in the repository.
 
 ## Local Development 🧑‍💻
 
@@ -165,6 +111,7 @@ pnpm dev
 | Variable                                  | Description                                               | Required                                    | Example                                                     |
 | ----------------------------------------- | --------------------------------------------------------- | ------------------------------------------- | ----------------------------------------------------------- |
 | `POSTGRES_URL`                            | PostgreSQL connection URL                                 | Yes                                         | `postgres://user:pass@managed-db.example.com:5432/db`       |
+| `APP_DOMAIN`                              | Public domain used by Dokploy routing                     | For Dokploy deployments                     | `kan.example.com`                                           |
 | `NEXT_PUBLIC_APP_NAME`                    | Display name used throughout the UI                       | Yes                                         | `ArivuLabs`                                                 |
 | `REDIS_URL`                               | Redis connection URL                                      | For rate limiting (optional)                | `redis://localhost:6379` or `redis://redis:6379` (Docker)   |
 | `EMAIL_FROM`                              | Sender email address                                      | For Email                                   | `"Kan <hello@mail.kan.bn>"`                                 |
