@@ -55,7 +55,6 @@ x-kan-env: &kan-env
 
 services:
   migrate:
-    image: ghcr.io/kanbn/kan-migrate:latest
     build:
       context: .
       dockerfile: ./apps/web/Dockerfile
@@ -66,7 +65,6 @@ services:
     restart: "no"
 
   web:
-    image: ghcr.io/kanbn/kan:latest
     build:
       context: .
       dockerfile: ./apps/web/Dockerfile
