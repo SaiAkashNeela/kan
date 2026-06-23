@@ -25,7 +25,7 @@ export const env = createEnv({
           s.split(",").every((l) => z.string().url().safeParse(l).success),
       )
       .optional(),
-    POSTGRES_URL: z.string().url().optional().or(z.literal("")),
+    POSTGRES_URL: z.string().url(),
     TRELLO_APP_API_KEY: z.string().optional(),
     TRELLO_APP_SECRET: z.string().optional(),
     STRIPE_SECRET_KEY: z.string().optional(),
@@ -92,7 +92,7 @@ export const env = createEnv({
     NEXT_PUBLIC_POSTHOG_KEY: z.string().optional(),
     NEXT_PUBLIC_POSTHOG_HOST: z.string().optional(),
     NEXT_PUBLIC_USE_STANDALONE_OUTPUT: z.string().optional(),
-    NEXT_PUBLIC_BASE_URL: z.string().url().optional(),
+    NEXT_PUBLIC_BASE_URL: z.string().url(),
     NEXT_PUBLIC_STORAGE_URL: z.string().url().optional(),
     NEXT_PUBLIC_AVATAR_BUCKET_NAME: z.string().optional(),
     NEXT_PUBLIC_ATTACHMENTS_BUCKET_NAME: z.string().optional(),

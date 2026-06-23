@@ -147,6 +147,7 @@ pnpm dev
 | Variable                                  | Description                                               | Required                                    | Example                                                     |
 | ----------------------------------------- | --------------------------------------------------------- | ------------------------------------------- | ----------------------------------------------------------- |
 | `POSTGRES_URL`                            | PostgreSQL connection URL                                 | Yes                                         | `postgres://user:pass@managed-db.example.com:5432/db`       |
+| `NEXT_PUBLIC_APP_NAME`                    | Display name used throughout the UI                       | Yes                                         | `ArivuLabs`                                                 |
 | `REDIS_URL`                               | Redis connection URL                                      | For rate limiting (optional)                | `redis://localhost:6379` or `redis://redis:6379` (Docker)   |
 | `EMAIL_FROM`                              | Sender email address                                      | For Email                                   | `"Kan <hello@mail.kan.bn>"`                                 |
 | `SMTP_HOST`                               | SMTP server hostname                                      | For Email                                   | `smtp.resend.com`                                           |
