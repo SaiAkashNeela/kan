@@ -37,6 +37,7 @@ import {
   HiOutlineCodeBracket,
   HiOutlineCodeBracketSquare,
   HiOutlineItalic,
+  HiOutlineLink,
   HiOutlineListBullet,
   HiOutlineNumberedList,
   HiOutlineStrikethrough,
@@ -447,6 +448,7 @@ export default function Editor({
   enableImages = false,
   placeholder,
   disableHeadings = false,
+  showToolbar = false,
 }: {
   content: string | null;
   onChange?: (value: string) => void;
@@ -457,6 +459,7 @@ export default function Editor({
   enableImages?: boolean;
   placeholder?: string;
   disableHeadings?: boolean;
+  showToolbar?: boolean;
 }) {
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -687,11 +690,124 @@ export default function Editor({
           margin: 1rem 0;
         }
       `}</style>
-      {!readOnly && editor && <EditorBubbleMenu editor={editor} />}
+      {!readOnly && editor && (
+        <>
+          {showToolbar && <EditorFormattingToolbar editor={editor} />}
+          <EditorBubbleMenu editor={editor} />
+        </>
+      )}
       <EditorContent
         editor={editor}
         className="prose dark:prose-invert prose-sm max-w-none overflow-y-auto [&_blockquote]:!text-xs [&_h1]:!text-lg [&_h2]:!text-base [&_h3]:!text-sm [&_ol]:!text-xs [&_p.is-empty::before]:text-light-900 [&_p.is-empty::before]:dark:text-dark-800 [&_p]:!text-sm [&_p]:text-light-950 [&_p]:dark:text-dark-950 [&_ul]:!text-xs"
       />
+    </div>
+  );
+}
+
+function EditorFormattingToolbar({ editor }: { editor: TiptapEditor }) {
+  const isMac = navigator.platform.includes("Mac");
+
+  const iconButtonClass = (active: boolean) =>
+    twMerge(
+      "rounded p-1.5 text-light-900 hover:bg-light-200 dark:text-dark-900 dark:hover:bg-dark-200",
+      active && "bg-light-200 text-light-1000 dark:bg-dark-200 dark:text-dark-1000",
+    );
+
+  const applyLink = () => {
+    const current = editor.getAttributes("link").href as string | undefined;
+    const url = window.prompt("URL", current ?? "");
+
+    if (url === null) return;
+
+    if (url.trim() === "") {
+      editor.chain().focus().unsetLink().run();
+      return;
+    }
+
+    editor
+      .chain()
+      .focus()
+      .extendMarkRange("link")
+      .setLink({ href: url.trim() })
+      .run();
+  };
+
+  return (
+    <div className="mb-3 flex flex-wrap items-center gap-1 rounded-md border border-light-300 bg-light-50 p-1 dark:border-dark-300 dark:bg-dark-50">
+      <select
+        aria-label="Text size"
+        value={
+          editor.isActive("heading", { level: 1 })
+            ? "h1"
+            : editor.isActive("heading", { level: 2 })
+              ? "h2"
+              : editor.isActive("heading", { level: 3 })
+                ? "h3"
+                : "p"
+        }
+        onChange={(event) => {
+          const value = event.target.value;
+
+          if (value === "p") {
+            editor.chain().focus().setParagraph().run();
+            return;
+          }
+
+          const level = Number(value.replace("h", ""));
+          editor.chain().focus().toggleHeading({ level: level as 1 | 2 | 3 }).run();
+        }}
+        className="rounded border border-light-300 bg-light-50 px-2 py-1 text-[11px] text-light-950 outline-none dark:border-dark-300 dark:bg-dark-100 dark:text-dark-950"
+      >
+        <option value="p">Paragraph</option>
+        <option value="h1">Heading 1</option>
+        <option value="h2">Heading 2</option>
+        <option value="h3">Heading 3</option>
+      </select>
+
+      <div className="mx-1 h-5 w-px bg-light-300 dark:bg-dark-300" />
+
+      <Button
+        className={iconButtonClass(editor.isActive("bold"))}
+        title={`Bold [${isMac ? "⌘" : "ctrl"} + b]`}
+        onClick={() => editor.chain().focus().toggleBold().run()}
+      >
+        <HiOutlineBold />
+      </Button>
+      <Button
+        className={iconButtonClass(editor.isActive("italic"))}
+        title={`Italic [${isMac ? "⌘" : "ctrl"} + i]`}
+        onClick={() => editor.chain().focus().toggleItalic().run()}
+      >
+        <HiOutlineItalic />
+      </Button>
+      <Button
+        className={iconButtonClass(editor.isActive("strike"))}
+        title={`Strikethrough [${isMac ? "⌘" : "ctrl"} + shift + s]`}
+        onClick={() => editor.chain().focus().toggleStrike().run()}
+      >
+        <HiOutlineStrikethrough />
+      </Button>
+      <Button
+        className={iconButtonClass(editor.isActive("bulletList"))}
+        title="Bulleted list"
+        onClick={() => editor.chain().focus().toggleBulletList().run()}
+      >
+        <HiOutlineListBullet />
+      </Button>
+      <Button
+        className={iconButtonClass(editor.isActive("orderedList"))}
+        title="Numbered list"
+        onClick={() => editor.chain().focus().toggleOrderedList().run()}
+      >
+        <HiOutlineNumberedList />
+      </Button>
+      <Button
+        className={iconButtonClass(editor.isActive("link"))}
+        title="Link"
+        onClick={applyLink}
+      >
+        <HiOutlineLink />
+      </Button>
     </div>
   );
 }

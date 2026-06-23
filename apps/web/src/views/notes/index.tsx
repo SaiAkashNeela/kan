@@ -539,6 +539,7 @@ export function NoteView({
             enableImages
             placeholder={t`Start writing...`}
             disableHeadings={publicMode}
+            showToolbar
           />
         </div>
       </div>
