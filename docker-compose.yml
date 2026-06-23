@@ -72,13 +72,13 @@ services:
       args:
         NEXT_PUBLIC_APP_NAME: ${NEXT_PUBLIC_APP_NAME}
         NEXT_PUBLIC_BASE_URL: ${NEXT_PUBLIC_BASE_URL}
-        APP_VERSION: ${APP_VERSION:-}
+        APP_VERSION: ${APP_VERSION:-1.0.1}
     environment: *kan-env
     expose:
       - "3000"
     labels:
       - traefik.enable=true
-      - traefik.http.routers.kan-web.rule=Host(`${APP_DOMAIN}`)
+      - traefik.http.routers.kan-web.rule=Host(`${NEXT_PUBLIC_BASE_URL}`)
       - traefik.http.routers.kan-web.entrypoints=websecure
       - traefik.http.routers.kan-web.tls.certResolver=letsencrypt
       - traefik.http.services.kan-web.loadbalancer.server.port=3000
