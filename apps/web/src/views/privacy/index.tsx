@@ -1,9 +1,11 @@
 import Link from "next/link";
 
 import { PageHead } from "~/components/PageHead";
+import { getAppName, getBaseUrl } from "~/utils/branding";
 import Layout from "../home/components/Layout";
 
 export default function PrivacyView() {
+  const appName = getAppName();
   const SubHeading = ({ children }: { children: React.ReactNode }) => (
     <h3 className="mb-4 text-2xl font-bold text-light-1000 dark:text-dark-950">
       {children}
@@ -27,10 +29,11 @@ export default function PrivacyView() {
   );
 
   const NAME = "Open Engineering";
+  const supportEmail = `mailto:support@${new URL(getBaseUrl()).hostname}`;
 
   return (
     <Layout>
-      <PageHead title="Privacy Policy | kan.bn" />
+      <PageHead title={`Privacy Policy | ${appName}`} />
       <div className="flex flex-col items-center">
         <div className="mb-20 flex h-full w-full max-w-[800px] flex-col lg:pt-[5rem]">
           <div className="flex items-center justify-center py-36 text-4xl font-bold tracking-tight text-light-1000 dark:text-dark-1000">
@@ -335,9 +338,9 @@ export default function PrivacyView() {
             </Text>
             <Link
               className="line-height text-md mb-4 text-light-1000 dark:text-dark-900"
-              href="mailto:support@kan.bn"
+              href={supportEmail}
             >
-              support@kan.bn
+              {supportEmail.replace("mailto:", "")}
             </Link>
           </div>
         </div>

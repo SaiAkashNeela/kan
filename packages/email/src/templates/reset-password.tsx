@@ -10,6 +10,8 @@ import { Preview } from "@react-email/preview";
 import { Text } from "@react-email/text";
 import { env } from "next-runtime-env";
 
+const appName = env("NEXT_PUBLIC_APP_NAME");
+
 export const ResetPasswordTemplate = ({
   resetPasswordUrl,
   resetPasswordToken,
@@ -19,7 +21,7 @@ export const ResetPasswordTemplate = ({
 }) => (
   <Html>
     <Head />
-    <Preview>Reset your Kan password</Preview>
+    <Preview>Reset your password</Preview>
     <Body style={{ backgroundColor: "white" }}>
       <Container
         style={{
@@ -39,12 +41,12 @@ export const ResetPasswordTemplate = ({
             color: "#232323",
           }}
         >
-          kan.bn
+          {appName}
         </Heading>
         <Heading
           style={{ fontSize: "24px", fontWeight: "bold", color: "#232323" }}
         >
-          Reset your Kan password
+          Reset your password
         </Heading>
         <Text
           style={{
@@ -96,7 +98,7 @@ export const ResetPasswordTemplate = ({
             target="_blank"
             style={{ color: "#7e7e7e", textDecoration: "underline" }}
           >
-            Kan
+            {appName}
           </Link>
           , the open source Trello alternative.
         </Text>

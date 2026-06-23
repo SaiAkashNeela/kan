@@ -11,6 +11,7 @@ import { useDebounce } from "~/hooks/useDebounce";
 import { useModal } from "~/providers/modal";
 import { usePopup } from "~/providers/popup";
 import { api } from "~/utils/api";
+import { getBaseUrl } from "~/utils/branding";
 
 const UpdateWorkspaceUrlForm = ({
   workspacePublicId,
@@ -127,8 +128,8 @@ const UpdateWorkspaceUrlForm = ({
           }
           prefix={
             env("NEXT_PUBLIC_KAN_ENV") === "cloud"
-              ? "kan.bn/"
-              : `${env("NEXT_PUBLIC_BASE_URL")}/`
+              ? `${new URL(getBaseUrl()).hostname}/`
+              : `${getBaseUrl()}/`
           }
           iconRight={
             isWorkspaceSlugAvailable?.isAvailable ||

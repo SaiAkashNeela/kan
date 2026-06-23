@@ -22,8 +22,11 @@ type SearchResult =
       title: string;
       description: string | null;
       slug: string;
+      visibility: "private" | "public";
+      isArchived: boolean;
       updatedAt: Date | null;
       createdAt: Date;
+      favorite?: boolean;
       type: "board";
     }
   | {
@@ -37,6 +40,17 @@ type SearchResult =
       updatedAt: Date | null;
       createdAt: Date;
       type: "card";
+    }
+  | {
+      publicId: string;
+      title: string;
+      description: string | null;
+      slug: string;
+      visibility: "private" | "public";
+      isArchived: boolean;
+      updatedAt: Date | null;
+      createdAt: Date;
+      type: "note";
     };
 
 export default function CommandPallette({
@@ -138,7 +152,9 @@ export default function CommandPallette({
                     const url =
                       result.type === "board"
                         ? `/boards/${result.publicId}`
-                        : `/cards/${result.publicId}`;
+                        : result.type === "card"
+                          ? `/cards/${result.publicId}`
+                          : `/notes/${result.publicId}`;
 
                     return (
                       <ComboboxOption
@@ -155,6 +171,8 @@ export default function CommandPallette({
                           <div className="mt-0.5 flex-shrink-0">
                             {result.type === "board" ? (
                               <HiFolder className="h-4 w-4 text-light-600 dark:text-dark-600" />
+                            ) : result.type === "card" ? (
+                              <HiDocumentText className="h-4 w-4 text-light-600 dark:text-dark-600" />
                             ) : (
                               <HiDocumentText className="h-4 w-4 text-light-600 dark:text-dark-600" />
                             )}
@@ -175,6 +193,13 @@ export default function CommandPallette({
                             {result.type === "card" && (
                               <div className="truncate text-xs text-light-700 dark:text-dark-700">
                                 {`${t`in`} ${result.boardName} → ${result.listName}`}
+                              </div>
+                            )}
+                            {result.type === "note" && (
+                              <div className="truncate text-xs text-light-700 dark:text-dark-700">
+                                {result.visibility === "public"
+                                  ? t`Public note`
+                                  : t`Private note`}
                               </div>
                             )}
                           </div>

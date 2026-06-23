@@ -18,6 +18,7 @@ import { LinguiProviderWrapper } from "~/providers/lingui";
 import { ModalProvider } from "~/providers/modal";
 import { PopupProvider } from "~/providers/popup";
 import { api } from "~/utils/api";
+import { getAppName } from "~/utils/branding";
 
 const jakarta = Plus_Jakarta_Sans({
   subsets: ["latin"],
@@ -25,8 +26,8 @@ const jakarta = Plus_Jakarta_Sans({
 });
 
 export const metadata = {
-  title: "Kan",
-  description: "The open source Trello alternative",
+  title: getAppName(),
+  description: "The open source project management alternative to Trello.",
   icons: [{ rel: "icon", url: "/favicon.ico" }],
 };
 

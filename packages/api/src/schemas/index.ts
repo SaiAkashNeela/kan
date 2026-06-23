@@ -7,6 +7,14 @@ export {
 } from "./board";
 
 export {
+  noteListItemSchema,
+  noteDetailSchema,
+  noteBySlugSchema,
+  noteCreateResponseSchema,
+  noteUpdateResponseSchema,
+} from "./note";
+
+export {
   cardCreateResponseSchema,
   cardUpdateResponseSchema,
   cardDetailSchema,

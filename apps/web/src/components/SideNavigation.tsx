@@ -30,6 +30,7 @@ import UserMenu from "~/components/UserMenu";
 import WorkspaceMenu from "~/components/WorkspaceMenu";
 import { useWorkspace } from "~/providers/workspace";
 import { api } from "~/utils/api";
+import { getAppName } from "~/utils/branding";
 
 interface SideNavigationProps {
   user: UserType;
@@ -106,6 +107,18 @@ export default function SideNavigation({
       },
     },
     {
+      name: t`Notes`,
+      href: "/notes",
+      icon: isDarkMode ? templatesIconDark : templatesIconLight,
+      keyboardShortcut: {
+        type: "SEQUENCE",
+        strokes: [{ key: "G" }, { key: "N" }],
+        action: () => router.push("/notes"),
+        group: "NAVIGATION",
+        description: t`Go to notes`,
+      },
+    },
+    {
       name: t`Templates`,
       href: "/templates",
       icon: isDarkMode ? templatesIconDark : templatesIconLight,
@@ -160,7 +173,7 @@ export default function SideNavigation({
             {!isCollapsed && (
               <Link href="/" className="block">
                 <h1 className="pl-2 text-[16px] font-bold tracking-tight text-neutral-900 dark:text-dark-1000">
-                  kan.bn
+                  {getAppName()}
                 </h1>
               </Link>
             )}

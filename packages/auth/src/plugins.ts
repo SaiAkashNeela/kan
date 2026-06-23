@@ -17,6 +17,11 @@ import { triggerWorkflow } from "./utils";
 
 const log = createLogger("auth");
 
+const appName = process.env.NEXT_PUBLIC_APP_NAME;
+if (!appName) {
+  throw new Error("NEXT_PUBLIC_APP_NAME is required");
+}
+
 async function cancelWorkspaceAccess(
   db: dbClient,
   workspacePublicId: string,
@@ -251,7 +256,7 @@ export function createPlugins(db: dbClient) {
               email,
               process.env.NEXT_PUBLIC_WHITE_LABEL_HIDE_POWERED_BY === "true"
                 ? "Sign in to your account"
-                : "Sign in to Kan",
+                : `Sign in to ${appName}`,
               "MAGIC_LINK",
               {
                 magicLoginUrl: url,

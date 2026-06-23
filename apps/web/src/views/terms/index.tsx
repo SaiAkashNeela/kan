@@ -1,9 +1,11 @@
 import Link from "next/link";
 
 import { PageHead } from "~/components/PageHead";
+import { getAppName } from "~/utils/branding";
 import Layout from "../home/components/Layout";
 
 export default function TermsView() {
+  const appName = getAppName();
   const SubHeading = ({ children }: { children: React.ReactNode }) => (
     <h3 className="mb-4 text-2xl font-bold text-light-1000 dark:text-dark-950">
       {children}
@@ -26,14 +28,14 @@ export default function TermsView() {
     </li>
   );
 
-  const NAME = "Open Engineering";
-  const DOMAIN = "https://kan.bn";
+  const NAME = appName;
+  const DOMAIN = process.env.NEXT_PUBLIC_BASE_URL ?? "https://example.com";
   const PRIVACY_URL = `${DOMAIN}/privacy`;
-  const CONTACT_EMAIL = "support@kan.bn";
+  const CONTACT_EMAIL = `support@${new URL(DOMAIN).hostname}`;
 
   return (
     <Layout>
-      <PageHead title="Terms of Service | kan.bn" />
+      <PageHead title={`Terms of Service | ${appName}`} />
       <div className="flex flex-col items-center">
         <div className="mb-20 flex h-full w-full max-w-[800px] flex-col lg:pt-[5rem]">
           <div className="flex items-center justify-center py-36 text-4xl font-bold tracking-tight text-light-1000 dark:text-dark-1000">
@@ -606,9 +608,9 @@ export default function TermsView() {
               contact us at{" "}
               <Link
                 className="line-height text-md mb-4 text-light-1000 dark:text-dark-900"
-                href="mailto:support@kan.bn"
+                href={`mailto:${CONTACT_EMAIL}`}
               >
-                support@kan.bn
+                {CONTACT_EMAIL}
               </Link>
             </Text>
           </div>

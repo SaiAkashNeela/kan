@@ -22,6 +22,8 @@ import { Tooltip } from "~/components/Tooltip";
 import { useDebounce } from "~/hooks/useDebounce";
 import { usePopup } from "~/providers/popup";
 import { api } from "~/utils/api";
+import { env } from "next-runtime-env";
+import { getBaseUrl } from "~/utils/branding";
 
 function slugify(value: string) {
   return value
@@ -177,6 +179,7 @@ export default function WorkspaceNameView() {
   }, []);
 
   const displayName = user?.name ?? session?.user.name ?? "";
+  const appHost = new URL(getBaseUrl()).hostname;
 
   const BOARDS = [t`Roadmap`, t`Engineering`, t`Marketing`];
   const [visibleCount, setVisibleCount] = useState(1);
@@ -229,7 +232,7 @@ export default function WorkspaceNameView() {
                         );
                       }}
                       disabled={!isProToggle}
-                      prefix="kan.bn/"
+                      prefix={`${new URL(getBaseUrl()).hostname}/`}
                       className={
                         !isProToggle ? "cursor-not-allowed opacity-50" : ""
                       }
@@ -330,7 +333,7 @@ export default function WorkspaceNameView() {
               <div className="flex flex-1 items-center gap-1.5 rounded-md bg-light-200 px-2.5 py-1 dark:bg-dark-300">
                 <HiLockClosed className="h-3 w-3 flex-shrink-0 text-light-700 dark:text-dark-700" />
                 <span className="truncate text-xs text-light-900 dark:text-dark-900">
-                  kan.bn/
+                  {appHost}/
                   <span className="text-light-1000 dark:text-dark-1000">
                     {previewSlug}
                   </span>
@@ -375,7 +378,7 @@ export default function WorkspaceNameView() {
 
               {/* Footer */}
               <p className="mt-2 text-[10px] font-semibold text-light-900 dark:text-dark-900">
-                kan.bn
+                {appHost}
               </p>
             </div>
           </div>

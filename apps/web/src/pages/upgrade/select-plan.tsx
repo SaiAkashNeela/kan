@@ -6,6 +6,7 @@ import { authClient } from "@kan/auth/client";
 
 import { PageHead } from "~/components/PageHead";
 import SelectPlanView from "~/views/onboarding/select-plan";
+import { getAppName } from "~/utils/branding";
 
 export default function UpgradeSelectPlanPage() {
   const router = useRouter();
@@ -21,10 +22,11 @@ export default function UpgradeSelectPlanPage() {
   }, [session, isPending, router]);
 
   if (isPending || !session?.user) return null;
+  const appName = getAppName();
 
   return (
     <>
-      <PageHead title="Upgrade | kan.bn" />
+      <PageHead title={`Upgrade | ${appName}`} />
       <SelectPlanView />
     </>
   );

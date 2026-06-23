@@ -5,6 +5,7 @@ import { t } from "@lingui/core/macro";
 import { PageHead } from "~/components/PageHead";
 import PatternedBackground from "~/components/PatternedBackground";
 import { api } from "~/utils/api";
+import { getAppName } from "~/utils/branding";
 
 export default function PublicBoardsView() {
   const router = useRouter();
@@ -72,7 +73,7 @@ export default function PublicBoardsView() {
 
   return (
     <>
-      <PageHead title={`${data?.name ?? t`Workspace`} | kan.bn`} />
+      <PageHead title={`${data?.name ?? t`Workspace`} | ${getAppName()}`} />
       <style jsx global>{`
         html {
           height: 100vh;
@@ -99,7 +100,7 @@ export default function PublicBoardsView() {
           className="text-lg font-bold tracking-tight text-neutral-900 dark:text-dark-1000"
           href="/"
         >
-          kan.bn
+          {getAppName()}
         </Link>
       </div>
     </>

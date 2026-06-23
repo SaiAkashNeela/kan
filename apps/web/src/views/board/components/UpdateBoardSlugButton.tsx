@@ -5,13 +5,14 @@ import { HiLink } from "react-icons/hi";
 
 import { Tooltip } from "~/components/Tooltip";
 import { usePopup } from "~/providers/popup";
+import { getBaseUrl } from "~/utils/branding";
 
 const displayBaseUrl =
   env("NEXT_PUBLIC_KAN_ENV") === "cloud"
-    ? "kan.bn"
-    : env("NEXT_PUBLIC_BASE_URL");
+    ? new URL(getBaseUrl()).hostname
+    : getBaseUrl();
 
-const linkBaseUrl = env("NEXT_PUBLIC_BASE_URL");
+const linkBaseUrl = getBaseUrl();
 
 const pathSeparator = (
   <div className="mx-1.5 h-4 w-px rotate-[20deg] bg-gray-300 dark:bg-dark-600" />

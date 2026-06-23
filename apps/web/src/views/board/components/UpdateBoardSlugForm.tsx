@@ -12,6 +12,7 @@ import { useDebounce } from "~/hooks/useDebounce";
 import { useModal } from "~/providers/modal";
 import { usePopup } from "~/providers/popup";
 import { api } from "~/utils/api";
+import { getBaseUrl } from "~/utils/branding";
 
 interface QueryParams {
   boardPublicId: string;
@@ -136,7 +137,7 @@ export function UpdateBoardSlugForm({
               ? t`This board URL has already been taken`
               : undefined)
           }
-          prefix={`${env("NEXT_PUBLIC_KAN_ENV") === "cloud" ? "kan.bn" : env("NEXT_PUBLIC_BASE_URL")}/${workspaceSlug}/`}
+          prefix={`${env("NEXT_PUBLIC_KAN_ENV") === "cloud" ? new URL(getBaseUrl()).hostname : getBaseUrl()}/${workspaceSlug}/`}
           onKeyDown={async (e) => {
             if (e.key === "Enter") {
               e.preventDefault();

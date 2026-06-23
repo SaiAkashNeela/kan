@@ -13,13 +13,15 @@ import Features from "./components/Features";
 import Layout from "./components/Layout";
 import Logos from "./components/Logos";
 import Testimonials from "./components/Testimonials";
+import { getAppName } from "~/utils/branding";
 
 export default function HomeView() {
   const { resolvedTheme } = useTheme();
+  const appName = getAppName();
 
   return (
     <Layout>
-      <PageHead title="Kan.bn | The open source alternative to Trello" />
+      <PageHead title={t`${appName} | The open source alternative to Trello`} />
       <div className="flex h-full w-full flex-col lg:pt-[5rem]">
         <div className="w-full pb-10 pt-32 lg:py-32">
           <div className="my-10 flex h-full w-full animate-fade-down flex-col items-center justify-center px-4">

@@ -3,6 +3,7 @@ import { t } from "@lingui/core/macro";
 import { FaDiscord, FaGithub } from "react-icons/fa";
 
 import { LanguageSelector } from "~/components/LanguageSelector";
+import { getAppName, getBaseUrl } from "~/utils/branding";
 
 const StatusMarker = () => (
   <Link
@@ -20,22 +21,25 @@ const StatusMarker = () => (
 );
 
 const Footer = () => {
+  const appName = getAppName();
+  const docsUrl = `${getBaseUrl()}/docs`;
+  const supportEmail = `mailto:support@${new URL(getBaseUrl()).hostname}`;
   const navigation = {
     documentation: [
-      { name: t`Getting started`, href: "https://docs.kan.bn/introduction" },
+      { name: t`Getting started`, href: `${docsUrl}/introduction` },
       {
         name: t`Importing from Trello`,
-        href: "https://docs.kan.bn/imports/trello",
+        href: `${docsUrl}/imports/trello`,
       },
       {
         name: t`API Reference`,
-        href: "https://docs.kan.bn/api-reference/introduction",
+        href: `${docsUrl}/api-reference/introduction`,
       },
     ],
     company: [
       { name: t`Roadmap`, href: "/kan/roadmap" },
       { name: t`GitHub`, href: "https://github.com/kanbn/kan" },
-      { name: t`Contact`, href: "mailto:support@kan.bn" },
+      { name: t`Contact`, href: supportEmail },
       { name: t`OSS Friends`, href: "/oss-friends" },
     ],
     legal: [
@@ -67,6 +71,9 @@ const Footer = () => {
               </Link>
             </div>
 
+            <div className="mb-4 text-lg font-bold text-light-1000 dark:text-dark-1000">
+              {appName}
+            </div>
             <StatusMarker />
             <LanguageSelector />
           </div>

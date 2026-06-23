@@ -9,11 +9,13 @@ import Layout from "../home/components/Layout";
 import Logos from "../home/components/Logos";
 import FeatureComparisonTable from "./components/FeatureComparisonTable";
 import PricingTiers from "./components/PricingTiers";
+import { getAppName } from "~/utils/branding";
 
 type FrequencyValue = "monthly" | "annually";
 
 export default function PricingView() {
   const { resolvedTheme } = useTheme();
+  const appName = getAppName();
   const frequencies = [
     {
       value: "monthly" as FrequencyValue,
@@ -31,7 +33,7 @@ export default function PricingView() {
 
   return (
     <Layout>
-      <PageHead title={`${t`Pricing`} | kan.bn`} />
+      <PageHead title={`${t`Pricing`} | ${appName}`} />
 
       <div className="flex h-full w-full flex-col lg:pt-[5rem]">
         <div className="w-full pb-10 pt-32">

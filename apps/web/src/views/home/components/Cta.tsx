@@ -3,8 +3,10 @@ import { t } from "@lingui/core/macro";
 import { useEffect, useState } from "react";
 
 import Button from "~/components/Button";
+import { getAppName } from "~/utils/branding";
 
 const Cta = ({ theme }: { theme: string }) => {
+  const appName = getAppName();
   const [currentWorkspaceSlug, setCurrentWorkspaceSlug] = useState("acme");
   const [isVisible, setIsVisible] = useState(true);
 
@@ -48,7 +50,9 @@ const Cta = ({ theme }: { theme: string }) => {
                 : "-translate-y-4 opacity-0"
             }`}
           >
-            <p>kan.bn/{currentWorkspaceSlug}</p>
+            <p>
+              {appName}/{currentWorkspaceSlug}
+            </p>
           </div>
           <h2 className="text-balance text-4xl font-bold tracking-tight text-light-1000 dark:text-dark-1000 sm:text-4xl">
             {t`Get started for free today`}

@@ -11,6 +11,8 @@ import { Text } from "@react-email/text";
 import { env } from "next-runtime-env";
 import * as React from "react";
 
+const appName = env("NEXT_PUBLIC_APP_NAME");
+
 export const MagicLinkTemplate = ({
   magicLoginUrl,
 }: {
@@ -38,12 +40,12 @@ export const MagicLinkTemplate = ({
             color: "#232323",
           }}
         >
-          kan.bn
+          {appName}
         </Heading>
         <Heading
           style={{ fontSize: "24px", fontWeight: "bold", color: "#232323" }}
         >
-          Login to your Kan account
+          Login to your account
         </Heading>
         <Text
           style={{
@@ -95,7 +97,7 @@ export const MagicLinkTemplate = ({
             target="_blank"
             style={{ color: "#7e7e7e", textDecoration: "underline" }}
           >
-            Kan
+            {appName}
           </Link>
           , the open source Trello alternative.
         </Text>

@@ -12,6 +12,7 @@ import { boards, userBoardFavorites } from "./boards";
 import { cards } from "./cards";
 import { imports } from "./imports";
 import { lists } from "./lists";
+import { notes, userNoteFavorites } from "./notes";
 import { workspaceMembers, workspaces } from "./workspaces";
 import { integrations } from "./integrations";
 
@@ -48,6 +49,12 @@ export const usersRelations = relations(users, ({ many }) => ({
   }),
   lists: many(lists, {
     relationName: "listsCreatedByUser",
+  }),
+  deletedNotes: many(notes, {
+    relationName: "noteDeletedByUser",
+  }),
+  notes: many(notes, {
+    relationName: "noteCreatedByUser",
   }),
   deletedWorkspaces: many(workspaces, {
     relationName: "workspaceDeletedByUser",
@@ -93,5 +100,16 @@ export const userBoardFavoritesRelations = relations(userBoardFavorites, ({ one 
   board: one(boards, {
     fields: [userBoardFavorites.boardId],
     references: [boards.id],
+  }),
+}));
+
+export const userNoteFavoritesRelations = relations(userNoteFavorites, ({ one }) => ({
+  user: one(users, {
+    fields: [userNoteFavorites.userId],
+    references: [users.id],
+  }),
+  note: one(notes, {
+    fields: [userNoteFavorites.noteId],
+    references: [notes.id],
   }),
 }));

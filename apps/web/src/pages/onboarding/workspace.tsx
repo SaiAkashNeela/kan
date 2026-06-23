@@ -1,4 +1,5 @@
 import { useRouter } from "next/navigation";
+import { t } from "@lingui/core/macro";
 import { env } from "next-runtime-env";
 import { useEffect } from "react";
 
@@ -6,10 +7,12 @@ import { authClient } from "@kan/auth/client";
 
 import { PageHead } from "~/components/PageHead";
 import WorkspaceDetailsView from "~/views/onboarding/workspace-details";
+import { getAppName } from "~/utils/branding";
 
 export default function WorkspaceDetailsPage() {
   const router = useRouter();
   const { data: session, isPending } = authClient.useSession();
+  const appName = getAppName();
 
   useEffect(() => {
     if (!isPending && !session?.user) router.push("/login");
@@ -21,7 +24,7 @@ export default function WorkspaceDetailsPage() {
 
   return (
     <>
-      <PageHead title="Create workspace | kan.bn" />
+      <PageHead title={t`Create workspace | ${appName}`} />
       <WorkspaceDetailsView />
     </>
   );

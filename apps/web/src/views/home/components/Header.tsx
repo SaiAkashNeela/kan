@@ -4,9 +4,13 @@ import { useEffect, useState } from "react";
 import { twMerge } from "tailwind-merge";
 
 import Button from "~/components/Button";
+import { getAppName, getBaseUrl } from "~/utils/branding";
 
 const Header = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const appName = getAppName();
+  const docsUrl = `${getBaseUrl()}/docs`;
+  const supportEmail = `mailto:support@${new URL(getBaseUrl()).hostname}`;
 
   const desktopMenuItems = [
     {
@@ -18,7 +22,7 @@ const Header = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
     { label: t`Pricing`, href: "/pricing" },
     {
       label: t`Docs`,
-      href: "https://docs.kan.bn",
+      href: docsUrl,
       openInNewTab: true,
     },
   ];
@@ -34,12 +38,12 @@ const Header = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
     { label: t`Pricing`, href: "/pricing", group: "Product" },
     {
       label: t`Documentation`,
-      href: "https://docs.kan.bn",
+      href: docsUrl,
       openInNewTab: true,
       group: "Resources",
     },
     { label: t`FAQ`, href: "/#faq", group: "Resources" },
-    { label: t`Contact`, href: "mailto:support@kan.bn", group: "Resources" },
+    { label: t`Contact`, href: supportEmail, group: "Resources" },
   ];
 
   // Group mobile menu items by their group property
@@ -76,7 +80,7 @@ const Header = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
             <div className="my-auto flex items-center justify-between">
               <Link href="/">
                 <h1 className="text-lg font-bold tracking-tight text-neutral-900 dark:text-dark-1000 lg:w-[200px]">
-                  kan.bn
+                  {appName}
                 </h1>
               </Link>
             </div>

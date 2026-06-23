@@ -10,6 +10,7 @@ import LoadingSpinner from "~/components/LoadingSpinner";
 import { PageHead } from "~/components/PageHead";
 import PatternedBackground from "~/components/PatternedBackground";
 import { api } from "~/utils/api";
+import { getAppName } from "~/utils/branding";
 
 export default function InvitePage() {
   const router = useRouter();
@@ -20,6 +21,7 @@ export default function InvitePage() {
     authClient.useSession();
 
   const isCloudEnv = env("NEXT_PUBLIC_KAN_ENV") === "cloud";
+  const appName = getAppName();
 
   const inviteCode = Array.isArray(code) ? code[0] : code;
 
@@ -87,7 +89,7 @@ export default function InvitePage() {
   ) {
     return (
       <>
-        <PageHead title={t`Join workspace`} />
+        <PageHead title={t`Join workspace | ${appName}`} />
         <PatternedBackground />
         <div className="flex min-h-screen items-center justify-center">
           <LoadingSpinner size="lg" />
@@ -99,7 +101,7 @@ export default function InvitePage() {
   const PageWrapper = ({ children }: { children: React.ReactNode }) => {
     return (
       <>
-        <PageHead title={t`Join workspace | kan.bn`} />
+        <PageHead title={t`Join workspace`} />
         {children}
       </>
     );
@@ -142,7 +144,7 @@ export default function InvitePage() {
             {!error ? (
               <p className="mt-4 text-center text-sm text-light-900 dark:text-dark-800">
                 {isCloudEnv
-                  ? t`You've been invited to join a workspace on kan.bn.`
+                  ? t`You've been invited to join a workspace on ${appName}.`
                   : t`You've been invited to join a workspace.`}
               </p>
             ) : (

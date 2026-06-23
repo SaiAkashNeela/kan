@@ -5,7 +5,7 @@ mode: "wide"
 tag: "NEW"
 ---
 
-This guide introduces how to self-host Kan. It starts with the minimal Docker Compose setup (web + PostgreSQL) and points you to optional features like email and S3-based file storage.
+This guide introduces how to self-host Kan. It starts with the minimal Docker Compose setup (web + managed PostgreSQL) and points you to optional features like email and S3-based file storage.
 
 ## What you’ll set up
 
@@ -13,8 +13,8 @@ This guide introduces how to self-host Kan. It starts with the minimal Docker Co
   <Card title="Kan" icon="globe" color="#0284c7" horizontal>
     Next.js application served on port 3000.
   </Card>
-  <Card title="PostgreSQL 15" icon="database" color="#65a30d" horizontal>
-    Primary database for Kan data.
+  <Card title="PostgreSQL" icon="database" color="#65a30d" horizontal>
+    Primary database for Kan data, provided by your managed PostgreSQL service.
   </Card>
 </CardGroup>
 
@@ -49,36 +49,25 @@ This guide introduces how to self-host Kan. It starts with the minimal Docker Co
         environment:
           NEXT_PUBLIC_BASE_URL: http://localhost:3000
           BETTER_AUTH_SECRET: your_auth_secret
-          POSTGRES_URL: postgresql://kan:your_postgres_password@postgres:5432/kan_db
+          POSTGRES_URL: postgresql://kan:your_postgres_password@managed-db.example.com:5432/kan_db
           NEXT_PUBLIC_ALLOW_CREDENTIALS: true
-        depends_on:
-          - postgres
         restart: unless-stopped
 
-      postgres:
-        image: postgres:15
-        container_name: kan-db
-        environment:
-          POSTGRES_DB: kan_db
-          POSTGRES_USER: kan
-          POSTGRES_PASSWORD: your_postgres_password
-        ports:
-          - 5432:5432
-        volumes:
-          - kan_postgres_data:/var/lib/postgresql/data
-        restart: unless-stopped
+      migrate:
+        image: ghcr.io/kanbn/kan-migrate:latest
+        container_name: kan-migrate
         networks:
           - kan-network
+        environment:
+          POSTGRES_URL: postgresql://kan:your_postgres_password@managed-db.example.com:5432/kan_db
+        restart: "no"
 
     networks:
       kan-network:
-
-    volumes:
-      kan_postgres_data:
     ```
 
     <Tip>
-      The example above is intentionally minimal. The repository provides a more feature-complete compose file at [docker-compose.yml](https://github.com/kanbn/kan/blob/main/docker-compose.yml) if you want environment-based configuration, OAuth, S3, and more.
+      The example above is intentionally minimal. The repository provides a more feature-complete compose file at [docker-compose.yml](https://github.com/kanbn/kan/blob/main/docker-compose.yml) if you want environment-based configuration, OAuth, S3, and more. It no longer starts a local PostgreSQL container.
     </Tip>
 
   </Step>
@@ -111,7 +100,7 @@ This guide introduces how to self-host Kan. It starts with the minimal Docker Co
       # Required
       NEXT_PUBLIC_BASE_URL=http://localhost:3000
       BETTER_AUTH_SECRET=replace_with_long_random_string
-      POSTGRES_URL=postgresql://kan:your_postgres_password@postgres:5432/kan_db
+      POSTGRES_URL=postgresql://kan:your_postgres_password@managed-db.example.com:5432/kan_db
 
       # Optional: Email
       EMAIL_FROM="Kan <hello@mail.kan.bn>"

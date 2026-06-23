@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import Button from "~/components/Button";
 import { PageHead } from "~/components/PageHead";
 import Layout from "../home/components/Layout";
+import { getAppName } from "~/utils/branding";
 
 interface OSSFriend {
   name: string;
@@ -17,6 +18,7 @@ interface OSSFriendsResponse {
 }
 
 export default function OSSFriendsView() {
+  const appName = getAppName();
   const [ossFriends, setOSSFriends] = useState<OSSFriend[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const fetchOSSFriends = async (): Promise<OSSFriend[]> => {
@@ -49,7 +51,7 @@ export default function OSSFriendsView() {
 
   return (
     <Layout>
-      <PageHead title={`${t`OSS Friends`} | kan.bn`} />
+      <PageHead title={`${t`OSS Friends`} | ${appName}`} />
 
       <div className="flex h-full w-full flex-col lg:pt-[5rem]">
         <div className="w-full pb-10 pt-32">

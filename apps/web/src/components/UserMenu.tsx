@@ -189,7 +189,7 @@ export default function UserMenu({
               </Menu.Item>
               <Menu.Item>
                 <Link
-                  href="mailto:support@kan.bn"
+                  href={`mailto:support@${new URL(env("NEXT_PUBLIC_BASE_URL")).hostname}`}
                   target="_blank"
                   rel="noreferrer"
                   onClick={handleLinkClick}
@@ -200,7 +200,7 @@ export default function UserMenu({
               </Menu.Item>
               <Menu.Item>
                 <Link
-                  href="https://docs.kan.bn"
+                  href={`${env("NEXT_PUBLIC_BASE_URL")}/docs`}
                   target="_blank"
                   rel="noreferrer"
                   onClick={handleLinkClick}

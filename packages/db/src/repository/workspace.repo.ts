@@ -13,13 +13,7 @@ import {
 
 import type { dbClient } from "@kan/db/client";
 import type { Permission, Role } from "@kan/shared";
-import {
-  boards,
-  cards,
-  lists,
-  workspaceMembers,
-  workspaces,
-} from "@kan/db/schema";
+import { boards, cards, lists, workspaceMembers, workspaces } from "@kan/db/schema";
 import {
   generateUID,
   generateWorkspacePrefix,
@@ -27,6 +21,7 @@ import {
 } from "@kan/shared";
 
 import * as permissionRepo from "./permission.repo";
+import * as noteRepo from "./note.repo";
 
 // System role definitions
 const SYSTEM_ROLES: {
@@ -402,6 +397,7 @@ const parseTicketId = (
 export const searchBoardsAndCards = async (
   db: dbClient,
   workspaceId: number,
+  userId: string,
   query: string,
   limit = 20,
 ) => {
@@ -487,6 +483,14 @@ export const searchBoardsAndCards = async (
     )
     .limit(ticketId ? limit : Math.floor(limit * 0.6));
 
+  const noteResults = await noteRepo.searchByWorkspaceId(
+    db,
+    workspaceId,
+    userId,
+    query,
+    ticketId ? 0 : Math.floor(limit * 0.2),
+  );
+
   // Combine results
   const allResults = [
     ...boardResults.map((board) => ({
@@ -496,6 +500,17 @@ export const searchBoardsAndCards = async (
     ...cardResults.map((card) => ({
       ...card,
       type: "card" as const,
+    })),
+    ...noteResults.map((note) => ({
+      publicId: note.publicId,
+      title: note.title,
+      description: null,
+      slug: note.slug,
+      visibility: note.visibility,
+      isArchived: note.isArchived,
+      updatedAt: note.updatedAt ?? null,
+      createdAt: note.createdAt ?? new Date(),
+      type: "note" as const,
     })),
   ];
 

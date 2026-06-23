@@ -575,6 +575,17 @@ export const workspaceRouter = createTRPCRouter({
             createdAt: z.date(),
             type: z.literal("card"),
           }),
+          z.object({
+            publicId: z.string(),
+            title: z.string(),
+            description: z.string().nullable(),
+            slug: z.string(),
+            visibility: z.enum(["private", "public"]),
+            isArchived: z.boolean(),
+            updatedAt: z.date().nullable(),
+            createdAt: z.date(),
+            type: z.literal("note"),
+          }),
         ]),
       ),
     )
@@ -602,6 +613,7 @@ export const workspaceRouter = createTRPCRouter({
       const result = await workspaceRepo.searchBoardsAndCards(
         ctx.db,
         workspace.id,
+        userId,
         input.query,
         input.limit,
       );

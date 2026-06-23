@@ -57,7 +57,7 @@ The easiest way to deploy Kan is through Railway. We've partnered with Railway t
 
 ### Docker Compose
 
-Alternatively, you can self-host Kan with Docker Compose. This will set up everything for you including your postgres database and automatically run migrations.
+Alternatively, you can self-host Kan with Docker Compose. This will run the app and migrations against your managed PostgreSQL database.
 
 1. Create a `.env` file with your environment variables (see [Environment Variables](#environment-variables-) section below)
 
@@ -72,9 +72,6 @@ services:
       - kan-network
     environment:
       - POSTGRES_URL=${POSTGRES_URL}
-    depends_on:
-      postgres:
-        condition: service_healthy
     restart: "no"
 
   web:
@@ -96,31 +93,8 @@ services:
         condition: service_completed_successfully
     restart: unless-stopped
 
-  postgres:
-    image: postgres:15
-    container_name: kan-db
-    environment:
-      - POSTGRES_DB=kan_db
-      - POSTGRES_USER=kan
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-    ports:
-      - 5432:5432
-    volumes:
-      - kan_postgres_data:/var/lib/postgresql/data
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U kan -d kan_db"]
-      interval: 5s
-      timeout: 5s
-      retries: 10
-    restart: unless-stopped
-    networks:
-      - kan-network
-
 networks:
   kan-network:
-
-volumes:
-  kan_postgres_data:
 ```
 
 3. Start the containers in detached mode:
@@ -172,7 +146,7 @@ pnpm dev
 
 | Variable                                  | Description                                               | Required                                    | Example                                                     |
 | ----------------------------------------- | --------------------------------------------------------- | ------------------------------------------- | ----------------------------------------------------------- |
-| `POSTGRES_URL`                            | PostgreSQL connection URL                                 | To use external database                    | `postgres://user:pass@localhost:5432/db`                    |
+| `POSTGRES_URL`                            | PostgreSQL connection URL                                 | Yes                                         | `postgres://user:pass@managed-db.example.com:5432/db`       |
 | `REDIS_URL`                               | Redis connection URL                                      | For rate limiting (optional)                | `redis://localhost:6379` or `redis://redis:6379` (Docker)   |
 | `EMAIL_FROM`                              | Sender email address                                      | For Email                                   | `"Kan <hello@mail.kan.bn>"`                                 |
 | `SMTP_HOST`                               | SMTP server hostname                                      | For Email                                   | `smtp.resend.com`                                           |

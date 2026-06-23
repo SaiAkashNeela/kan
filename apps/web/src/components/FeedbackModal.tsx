@@ -9,6 +9,7 @@ import Input from "~/components/Input";
 import { useModal } from "~/providers/modal";
 import { usePopup } from "~/providers/popup";
 import { api } from "~/utils/api";
+import { getBaseUrl } from "~/utils/branding";
 
 interface NewFeedbackFormInput {
   feedback: string;
@@ -17,6 +18,8 @@ interface NewFeedbackFormInput {
 export default function FeedbackModal() {
   const { closeModal } = useModal();
   const { showPopup } = usePopup();
+  const docsUrl = `${getBaseUrl()}/docs`;
+  const supportEmail = `mailto:support@${new URL(getBaseUrl()).hostname}`;
 
   const { handleSubmit, setValue, watch, reset } =
     useForm<NewFeedbackFormInput>({
@@ -94,14 +97,14 @@ export default function FeedbackModal() {
           <p>
             {t`Need help?`}{" "}
             <Link
-              href="mailto:support@kan.bn"
+              href={supportEmail}
               className="text-blue-600 underline dark:text-blue-300"
             >
               {t`Contact us`}
             </Link>
             {t`, or see our`}{" "}
             <Link
-              href="https://docs.kan.bn"
+              href={docsUrl}
               target="_blank"
               rel="noreferrer"
               className="text-blue-600 underline dark:text-blue-300"

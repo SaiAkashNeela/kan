@@ -11,6 +11,17 @@ import { Text } from "@react-email/text";
 import { env } from "next-runtime-env";
 import * as React from "react";
 
+const appName = env("NEXT_PUBLIC_APP_NAME");
+const baseUrl = env("NEXT_PUBLIC_BASE_URL");
+
+if (!appName) {
+  throw new Error("NEXT_PUBLIC_APP_NAME is required");
+}
+
+if (!baseUrl) {
+  throw new Error("NEXT_PUBLIC_BASE_URL is required");
+}
+
 export const JoinWorkspaceTemplate = ({
   magicLoginUrl,
   inviterName,
@@ -22,7 +33,7 @@ export const JoinWorkspaceTemplate = ({
 }) => (
   <Html>
     <Head />
-    <Preview>Join {workspaceName ?? "workspace"} on kan.bn</Preview>
+    <Preview>Join {workspaceName ?? "workspace"} on {appName}</Preview>
     <Body style={{ backgroundColor: "white" }}>
       <Container
         style={{
@@ -42,7 +53,7 @@ export const JoinWorkspaceTemplate = ({
             color: "#232323",
           }}
         >
-          {env("NEXT_PUBLIC_WHITE_LABEL_HIDE_POWERED_BY") !== "true" && "Kan"}
+          {env("NEXT_PUBLIC_WHITE_LABEL_HIDE_POWERED_BY") !== "true" && appName}
         </Heading>
         <Heading
           style={{ fontSize: "24px", fontWeight: "bold", color: "#232323" }}
@@ -101,11 +112,11 @@ export const JoinWorkspaceTemplate = ({
             />
             <Text style={{ color: "#7e7e7e" }}>
               <Link
-                href={env("NEXT_PUBLIC_BASE_URL")}
+                href={baseUrl}
                 target="_blank"
                 style={{ color: "#7e7e7e", textDecoration: "underline" }}
               >
-                Kan
+                {appName}
               </Link>
               , the open source Trello alternative.
             </Text>

@@ -6,6 +6,7 @@ export * from "./checklists";
 export * from "./feedback";
 export * from "./imports";
 export * from "./labels";
+export * from "./notes";
 export * from "./lists";
 export * from "./users";
 export * from "./integrations";

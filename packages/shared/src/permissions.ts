@@ -10,6 +10,7 @@ export type PermissionAction = (typeof permissionActions)[number];
 export const permissionResources = [
   "workspace",
   "board",
+  "note",
   "list",
   "card",
   "comment",
@@ -26,6 +27,10 @@ export const allPermissions = [
   "board:create",
   "board:edit",
   "board:delete",
+  "note:view",
+  "note:create",
+  "note:edit",
+  "note:delete",
   "list:view",
   "list:create",
   "list:edit",
@@ -61,6 +66,8 @@ export const defaultRolePermissions: Record<Role, readonly Permission[]> = {
     "workspace:view",
     "board:view",
     "board:create",
+    "note:view",
+    "note:create",
     "list:view",
     "list:create",
     "list:edit",
@@ -79,6 +86,7 @@ export const defaultRolePermissions: Record<Role, readonly Permission[]> = {
   guest: [
     "workspace:view",
     "board:view",
+    "note:view",
     "list:view",
     "card:view",
     "comment:view",
@@ -104,6 +112,15 @@ export const permissionCategories = {
       "board:create",
       "board:edit",
       "board:delete",
+    ] as const,
+  },
+  note: {
+    label: "Notes",
+    permissions: [
+      "note:view",
+      "note:create",
+      "note:edit",
+      "note:delete",
     ] as const,
   },
   list: {
@@ -162,4 +179,3 @@ export function hasPermissionInDefaults(
 ): boolean {
   return defaultRolePermissions[role].includes(permission);
 }
-

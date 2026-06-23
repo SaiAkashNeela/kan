@@ -70,8 +70,8 @@ export default function WorkspaceMenu({
               >
                 <span className="inline-flex h-6 w-6 items-center justify-center rounded-md bg-indigo-700">
                   <span className="text-xs font-bold leading-none text-white">
-                    {workspace.name.charAt(0).toUpperCase()}
-                  </span>
+                  {workspace.name.charAt(0).toUpperCase()}
+                </span>
                 </span>
                 <span
                   className={twMerge(
@@ -79,8 +79,8 @@ export default function WorkspaceMenu({
                     isCollapsed && "md:hidden",
                   )}
                 >
-                  {workspace.name}
-                </span>
+                    {workspace.name}
+                  </span>
                 {workspace.plan === "pro" && (
                   <span
                     className={twMerge(

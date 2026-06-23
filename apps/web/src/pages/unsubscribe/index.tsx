@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import Button from "~/components/Button";
 import { PageHead } from "~/components/PageHead";
 import PatternedBackground from "~/components/PatternedBackground";
+import { getAppName } from "~/utils/branding";
 
 type UnsubscribeStatus = "idle" | "processing" | "success" | "error";
 
@@ -66,10 +67,11 @@ export default function UnsubscribePage() {
   };
 
   const title = t`Unsubscribe`;
+  const appName = getAppName();
 
   return (
     <>
-      <PageHead title={`${title} | kan.bn`} />
+      <PageHead title={`${title} | ${appName}`} />
       <div className="relative flex min-h-screen items-center justify-center px-4 py-12 sm:px-6 lg:px-8">
         <PatternedBackground />
         <div className="z-10 w-full max-w-md space-y-6">

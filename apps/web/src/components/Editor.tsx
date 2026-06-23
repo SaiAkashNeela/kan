@@ -8,6 +8,7 @@ import type { Instance as TippyInstance } from "tippy.js";
 import { Button } from "@headlessui/react";
 import { t } from "@lingui/core/macro";
 import Link from "@tiptap/extension-link";
+import Image from "@tiptap/extension-image";
 import Mention from "@tiptap/extension-mention";
 import Placeholder from "@tiptap/extension-placeholder";
 import {
@@ -443,6 +444,7 @@ export default function Editor({
   readOnly = false,
   workspaceMembers,
   enableYouTubeEmbed = true,
+  enableImages = false,
   placeholder,
   disableHeadings = false,
 }: {
@@ -452,10 +454,31 @@ export default function Editor({
   readOnly?: boolean;
   workspaceMembers: WorkspaceMember[];
   enableYouTubeEmbed?: boolean;
+  enableImages?: boolean;
   placeholder?: string;
   disableHeadings?: boolean;
 }) {
   const containerRef = useRef<HTMLDivElement>(null);
+
+  const insertImageFile = (view: any, file: File) => {
+    const reader = new FileReader();
+    reader.onload = () => {
+      const result = reader.result;
+      if (typeof result !== "string") return;
+      const imageNode = view.state.schema.nodes.image;
+      if (!imageNode) return;
+
+      view.dispatch(
+        view.state.tr.replaceSelectionWith(
+          imageNode.create({ src: result }),
+        ),
+      );
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const isImageUrl = (text: string) =>
+    /^https?:\/\/.+\.(png|jpe?g|gif|webp|avif|svg)(\?.*)?$/i.test(text.trim());
 
   const editor = useEditor(
     {
@@ -474,6 +497,17 @@ export default function Editor({
           autolink: true,
           linkOnPaste: true,
         }),
+        ...(enableImages
+          ? [
+              Image.configure({
+                inline: false,
+                allowBase64: true,
+                HTMLAttributes: {
+                  class: "my-4 rounded-md border border-light-300 dark:border-dark-300",
+                },
+              }),
+            ]
+          : []),
         Markdown.configure({ transformPastedText: true }),
         Placeholder.configure({
           placeholder: readOnly
@@ -570,11 +604,53 @@ export default function Editor({
         attributes: {
           class: "outline-none focus:outline-none focus-visible:ring-0",
         },
+        handlePaste: (view, event) => {
+          if (!enableImages) return false;
+
+          const clipboardItems = Array.from(
+            event.clipboardData?.items ?? [],
+          );
+          const imageFile = clipboardItems
+            .map((item) => item.getAsFile())
+            .find((file): file is File => !!file && file.type.startsWith("image/"));
+
+          if (imageFile) {
+            insertImageFile(view, imageFile);
+            return true;
+          }
+
+          const text = event.clipboardData?.getData("text/plain")?.trim();
+          if (text && isImageUrl(text)) {
+            const imageNode = view.state.schema.nodes.image;
+            if (!imageNode) return false;
+            view.dispatch(
+              view.state.tr.replaceSelectionWith(
+                imageNode.create({ src: text }),
+              ),
+            );
+            return true;
+          }
+
+          return false;
+        },
+        handleDrop: (view, event) => {
+          if (!enableImages) return false;
+
+          const files = Array.from(event.dataTransfer?.files ?? []);
+          const imageFile = files.find((file) => file.type.startsWith("image/"));
+
+          if (imageFile) {
+            insertImageFile(view, imageFile);
+            return true;
+          }
+
+          return false;
+        },
       },
       editable: !readOnly,
       injectCSS: false,
     },
-    [], // creating the editor only once
+    [enableImages], // creating the editor only once
   );
 
   // this will sync external content changes without re-creating the editor instance

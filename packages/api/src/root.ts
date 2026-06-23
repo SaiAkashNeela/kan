@@ -7,6 +7,7 @@ import { healthRouter } from "./routers/health";
 import { importRouter } from "./routers/import";
 import { integrationRouter } from "./routers/integration";
 import { labelRouter } from "./routers/label";
+import { noteRouter } from "./routers/note";
 import { listRouter } from "./routers/list";
 import { memberRouter } from "./routers/member";
 import { permissionRouter } from "./routers/permission";
@@ -23,6 +24,7 @@ export const appRouter = createTRPCRouter({
   feedback: feedbackRouter,
   health: healthRouter,
   label: labelRouter,
+  note: noteRouter,
   list: listRouter,
   member: memberRouter,
   import: importRouter,

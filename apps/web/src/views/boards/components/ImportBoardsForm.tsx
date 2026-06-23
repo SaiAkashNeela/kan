@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Listbox, Transition } from "@headlessui/react";
 import { t } from "@lingui/core/macro";
 import { Plural, Trans } from "@lingui/react/macro";
+import { env } from "next-runtime-env";
 import { Fragment, useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { FaGithub, FaTrello } from "react-icons/fa";
@@ -504,6 +505,7 @@ export function ImportBoardsForm() {
   const { closeModal } = useModal();
   const [step, setStep] = useState(1);
   const [provider, setProvider] = useState<string | null>(null);
+  const docsBaseUrl = `${env("NEXT_PUBLIC_BASE_URL")}/docs`;
 
   return (
     <div>
@@ -513,7 +515,7 @@ export function ImportBoardsForm() {
             {t`New import`}
           </h2>
           <Link
-            href="https://docs.kan.bn/imports/trello"
+            href={`${docsBaseUrl}/imports/trello`}
             target="_blank"
             className="ml-2 text-neutral-500 hover:text-neutral-700 dark:text-dark-900 dark:hover:text-dark-700"
           >

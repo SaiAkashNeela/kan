@@ -1,3 +1,4 @@
+import { env } from "next-runtime-env";
 import { Body } from "@react-email/body";
 import { Button } from "@react-email/button";
 import { Container } from "@react-email/container";
@@ -8,8 +9,9 @@ import { Html } from "@react-email/html";
 import { Link } from "@react-email/link";
 import { Preview } from "@react-email/preview";
 import { Text } from "@react-email/text";
-import { env } from "next-runtime-env";
 import * as React from "react";
+
+const appName = env("NEXT_PUBLIC_APP_NAME");
 
 export const MentionTemplate = ({
   commenterName,
@@ -46,7 +48,7 @@ export const MentionTemplate = ({
             color: "#232323",
           }}
         >
-          kan.bn
+          {appName}
         </Heading>
         <Heading
           style={{ fontSize: "24px", fontWeight: "bold", color: "#232323" }}
@@ -95,7 +97,7 @@ export const MentionTemplate = ({
             target="_blank"
             style={{ color: "#7e7e7e", textDecoration: "underline" }}
           >
-            Kan
+            {appName}
           </Link>
           , the open source Trello alternative.
         </Text>
@@ -105,4 +107,3 @@ export const MentionTemplate = ({
 );
 
 export default MentionTemplate;
-
