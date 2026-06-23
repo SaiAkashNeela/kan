@@ -21,6 +21,11 @@ const permissionLabels: Record<Permission, string> = {
   "board:edit": t`Can edit boards`,
   "board:delete": t`Can delete boards`,
 
+  "note:view": t`Can view notes`,
+  "note:create": t`Can create notes`,
+  "note:edit": t`Can edit notes`,
+  "note:delete": t`Can delete notes`,
+
   "list:view": t`Can view lists`,
   "list:create": t`Can create lists`,
   "list:edit": t`Can edit lists`,
@@ -193,4 +198,3 @@ export function RolePermissions() {
     </div>
   );
 }
-

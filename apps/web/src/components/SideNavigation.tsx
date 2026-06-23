@@ -5,7 +5,7 @@ import { t } from "@lingui/core/macro";
 import { env } from "next-runtime-env";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
-import { HiBolt } from "react-icons/hi2";
+import { HiBolt, HiDocumentText } from "react-icons/hi2";
 import {
   TbLayoutSidebarLeftCollapse,
   TbLayoutSidebarLeftExpand,
@@ -91,7 +91,7 @@ export default function SideNavigation({
   const navigation: {
     name: string;
     href: string;
-    icon: object;
+    icon: object | React.ReactElement;
     keyboardShortcut: KeyboardShortcut;
   }[] = [
     {
@@ -109,7 +109,7 @@ export default function SideNavigation({
     {
       name: t`Notes`,
       href: "/notes",
-      icon: isDarkMode ? templatesIconDark : templatesIconLight,
+      icon: <HiDocumentText className="h-[18px] w-[18px] text-light-900 dark:text-dark-900" />,
       keyboardShortcut: {
         type: "SEQUENCE",
         strokes: [{ key: "G" }, { key: "N" }],
@@ -207,7 +207,7 @@ export default function SideNavigation({
                   href={item.href}
                   current={pathname.includes(item.href)}
                   name={item.name}
-                  json={item.icon}
+                  icon={item.icon}
                   isCollapsed={isCollapsed}
                   onCloseSideNav={onCloseSideNav}
                   keyboardShortcut={item.keyboardShortcut}

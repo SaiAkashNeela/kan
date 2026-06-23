@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { useState } from "react";
+import { isValidElement, useState } from "react";
 import { twMerge } from "tailwind-merge";
 
 import type { KeyboardShortcut } from "~/providers/keyboard-shortcuts";
@@ -11,7 +11,7 @@ const Button: React.FC<{
   href: string;
   current: boolean;
   name: string;
-  json: object;
+  icon: object | React.ReactElement;
   isCollapsed?: boolean;
   onCloseSideNav?: () => void;
   keyboardShortcut: KeyboardShortcut;
@@ -19,7 +19,7 @@ const Button: React.FC<{
   href,
   current,
   name,
-  json,
+  icon,
   isCollapsed = false,
   keyboardShortcut,
   onCloseSideNav,
@@ -62,7 +62,11 @@ const Button: React.FC<{
             : "gap-x-3",
         )}
       >
-        <LottieIcon index={index} json={json} isPlaying={isHovered} />
+        {isValidElement(icon) ? (
+          icon
+        ) : (
+          <LottieIcon index={index} json={icon} isPlaying={isHovered} />
+        )}
         <span className={twMerge(isCollapsed && "md:hidden")}>{name}</span>
       </div>
       {!isCollapsed && (

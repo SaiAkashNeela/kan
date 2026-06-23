@@ -253,6 +253,13 @@
       "when": 1782200000000,
       "tag": "20260623150000_AddNotesTable",
       "breakpoints": true
+    },
+    {
+      "idx": 36,
+      "version": "7",
+      "when": 1782201800000,
+      "tag": "20260623153000_BackfillNotesRolePermissions",
+      "breakpoints": true
     }
   ]
 }
